@@ -14,9 +14,9 @@ The game will be monetized through the sale of the game itself. It will not incl
 The controls of the game will include a joystick for walking left and right, a button for jumping, a button for shooting, a button for interacting and a button for switching weapons. 
 I will here identify some milestones for the development of the game: 
 ### Milestone 1: 
-Basic movement, physics, first level, assets. Add an enemy that can be killed and that drops collectables. Add collectables and collisions with these. Add a gold system and a balance to keep track of how much gold the player has. I will make the battlefield first where you fight enemies, to start it will just be a flat field, and I will start working on the town. 
+Basic movement, physics, first level, assets. Add collectables and collisions with these. Add a gold system and a balance to keep track of how much gold the player has. I will make the battlefield first where you fight enemies, to start it will just be a flat field, and I will start working on the town. 
 ### Milestone 2: 
-Implementation of most of the town, at least one shop. Implement the weapons system and buying weapons from a vendor. Maybe make the battlefield a bit more varied. 
+Implementation of most of the town, at least one shop. Implement the weapons system and buying weapons from a vendor. Maybe make the battlefield a bit more varied. Add an enemy that can be killed and that drops collectables. 
 ### Milestone 3: 
 Add and implement enemies and AI, health, damage, and health bars. Implement the quest system and add a final boss level or similar. 
 
