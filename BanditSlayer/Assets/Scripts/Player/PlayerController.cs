@@ -8,6 +8,8 @@ namespace Player
         private PlayerInputActions playerControls;
         [SerializeField] private Movement.Movement movement; 
         public InputAction movementInput;
+        public Transform weaponSlot;
+        public GameObject currentWeapon;
 
         private void Awake()
         {
@@ -34,6 +36,27 @@ namespace Player
         {
             Vector2 moveInput = movementInput.ReadValue<Vector2>(); 
             movement.Move(moveInput); 
+        }
+        
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            // Stop player movement when triggering border
+            if (other.CompareTag("Border"))
+            {
+                GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+            }
+        }
+        
+        public void ChangeWeapon(GameObject newWeaponPrefab)
+        {
+            GameObject newWeapon = Instantiate(newWeaponPrefab, weaponSlot.position, weaponSlot.rotation, weaponSlot);
+
+            if (currentWeapon != null)
+            {
+                Destroy(currentWeapon);
+            }
+
+            currentWeapon = newWeapon;
         }
     }
 }

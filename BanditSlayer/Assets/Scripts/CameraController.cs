@@ -22,6 +22,8 @@ public class CameraController : MonoBehaviour
     {
         Vector3 playerPosition = player.transform.position;
         var cameraTransform = transform;
-        cameraTransform.position = new Vector3(playerPosition.x, cameraTransform.position.y, cameraTransform.position.z);
+        var position = cameraTransform.position;
+        position = new Vector3(playerPosition.x, position.y, position.z);
+        cameraTransform.position = position;
     }
 }
