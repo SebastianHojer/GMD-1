@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -44,6 +45,11 @@ namespace Player
             if (other.CompareTag("Border"))
             {
                 GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+            }
+            else if (other.CompareTag("Coin"))
+            {
+                Destroy(other.GameObject());
+                CoinManager.Instance.AddToBalance(1);
             }
         }
         
