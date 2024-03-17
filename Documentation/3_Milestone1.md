@@ -25,6 +25,8 @@
     - For now this handles the Coins and the balance.
 - I made a CoinManager script that handles the balance.
   - I decided to make this a Singleton as to not instantiate more than one of this object in the game.
+  ![Singleton code](https://i.imgur.com/0islhNo.png)
   - I also decided to use delegates and events to "implement" the observer pattern
+  ![Observer pattern](https://i.imgur.com/lbWsiva.png)
 - The movement is now directly based on the input, before I used acceleration and deceleration
   - I did this because acceleration for the movement caused some weird interactions when using the controller where the player would slide across the screen if the stick was pointing down or up.
