@@ -20,13 +20,10 @@ namespace Interaction
 
         public void CheckForInteractions()
         {
-            Debug.Log("Checking for interactions");
             Collider2D[] colliders = Physics2D.OverlapPointAll(transform.position);
             foreach (var collider in colliders)
             {
-                Debug.Log("Collider:" + collider);
                 var interactable = collider.GetComponent<IInteractable>();
-                Debug.Log("Interactable is null: " + (interactable == null));
                 if (interactable != null)
                 {
                     interactable.Interact(interactor);

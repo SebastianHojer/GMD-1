@@ -60,22 +60,25 @@ public class Shop_UI : MonoBehaviour
     public void Show(ICustomer customer)
     {
         _customer = customer;
-        Debug.Log("Shown: " + _shown);
         if (!_shown)
         {
-            Debug.Log("Setting to active.");
-            gameObject.SetActive(true);   
+            Show();
         }
         else
         {
-            Debug.Log("Hiding");
             Hide();
         }
-        _shown = !_shown;
+    }
+
+    private void Show()
+    {
+        gameObject.SetActive(true);
+        _shown = true;
     }
     
-    private void Hide()
+    public void Hide()
     {
         gameObject.SetActive(false);
+        _shown = false;
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Interactables;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class ShopTriggerCollider : MonoBehaviour, IInteractable
@@ -25,5 +26,10 @@ public class ShopTriggerCollider : MonoBehaviour, IInteractable
                 _shopUI.Show(_customer);
             }
         }
+    }
+    
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        _shopUI.Hide();
     }
 }
