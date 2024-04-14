@@ -1,8 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using Interactables;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class ShopTriggerCollider : MonoBehaviour, IInteractable

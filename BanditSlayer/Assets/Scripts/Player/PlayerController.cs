@@ -1,4 +1,3 @@
-using System;
 using Collectables;
 using Common;
 using Unity.VisualScripting;

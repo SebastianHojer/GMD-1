@@ -1,10 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Net.Mime;
 using Common;
-using Interactables;
 using TMPro;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
