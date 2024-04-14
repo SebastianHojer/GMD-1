@@ -1,3 +1,4 @@
+using Collectables;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -25,14 +26,12 @@ public class BalanceDisplay : MonoBehaviour
 
     void UpdateBalanceText(int newBalance)
     {
-        // Example: Displaying a sprite before the balance
         string balanceString = "<sprite name=\"bronze_coin\"> " + newBalance;
         balanceText.text = balanceString;
     }
 
     void OnDestroy()
     {
-        // Unsubscribe from the balance changed event
         if (CoinManager.Instance != null)
             CoinManager.Instance.OnBalanceChanged -= UpdateBalanceText;
     }
