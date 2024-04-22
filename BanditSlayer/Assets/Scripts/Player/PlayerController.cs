@@ -50,9 +50,13 @@ namespace Player
             Vector2 moveInput = _movementInput.ReadValue<Vector2>(); 
             movement.Move(moveInput); 
             
+            // Check for interactions continuously
+            interaction.CheckForInteractions();
+            
             if (_interactionInput.triggered)
             {
-                interaction.CheckForInteractions();
+                // Perform interaction when the interact button is pressed
+                interaction.InteractWithClosest();
             }
         }
         

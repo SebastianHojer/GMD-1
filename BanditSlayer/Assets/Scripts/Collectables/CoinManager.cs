@@ -36,6 +36,16 @@ namespace Collectables
             _balance -= amount;
             OnBalanceChanged?.Invoke(_balance);
         }
+        
+        public bool SpendGoldAmount(int amount)
+        {
+            if (_balance >= amount)
+            {
+                DeductFromBalance(amount);
+                return true; 
+            }
+            return false; 
+        }
     
         public int GetBalance()
         {
