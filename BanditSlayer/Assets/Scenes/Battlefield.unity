@@ -1510,17 +1510,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movement: {fileID: 0}
-  movementInput:
-    m_Name: Movement Input
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: e87e78f9-af88-4af4-859e-c66d837c82a6
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings: []
-    m_Flags: 0
-  weaponSlot: {fileID: 0}
-  currentWeapon: {fileID: 0}
+  interaction: {fileID: 0}
 --- !u!114 &631589263
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1564,6 +1554,37 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 15
+--- !u!1 &648497143
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 648497144}
+  m_Layer: 0
+  m_Name: PlayerSpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &648497144
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 648497143}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.36, y: -3.48, z: 2.6271927}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &661094209
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15143,3 +15164,4 @@ SceneRoots:
   - {fileID: 399372554}
   - {fileID: 41451826}
   - {fileID: 63813202}
+  - {fileID: 648497144}

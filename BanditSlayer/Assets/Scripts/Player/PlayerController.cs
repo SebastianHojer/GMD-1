@@ -3,13 +3,15 @@ using Common;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 namespace Player
 {
     public class PlayerController : MonoBehaviour, ICustomer
     {
-        private PlayerInputActions _playerControls;
+        private static PlayerController instance;
         
+        private PlayerInputActions _playerControls;
         
         [SerializeField] private Movement.Movement movement;
         [SerializeField] private Interaction.Interaction interaction;
@@ -17,14 +19,28 @@ namespace Player
         private InputAction _interactionInput;
         private InputAction _movementInput;
         
-        private Transform _weaponSlot;
-        private GameObject _currentWeapon;
+        [SerializeField] private Transform weapon;
+        private SpriteRenderer _weaponSpriteRenderer;
+        private Item.ItemType _currentWeapon;
 
         private void Awake()
         {
-            _playerControls = new PlayerInputActions();
+            if (instance == null)
+            {
+                instance = this;
+                DontDestroyOnLoad(gameObject);
+                _playerControls = new PlayerInputActions();
+                SceneManager.sceneLoaded += OnSceneLoaded;
+            }
+            else if (instance != this)
+            {
+                Destroy(gameObject);
+                return;
+            }
+            _movementInput = _playerControls.Player.Move;
+            _interactionInput = _playerControls.Player.Interact; 
         }
-    
+        
         private void Start()
         {
             movement = GetComponent<Movement.Movement>();
@@ -33,16 +49,25 @@ namespace Player
     
         private void OnEnable()
         {
-            _movementInput = _playerControls.Player.Move;
-            _movementInput.Enable();
-            
-            _interactionInput = _playerControls.Player.Interact;
-            _interactionInput.Enable();
+            _movementInput?.Enable();
+            _interactionInput?.Enable();
         }
 
         private void OnDisable()
         {
-            _movementInput.Disable();
+            _movementInput?.Disable();
+            _interactionInput?.Disable();
+        }
+        
+        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            GameObject spawnPoint = GameObject.Find("PlayerSpawnPoint");
+            if (spawnPoint != null)
+            {
+                transform.position = spawnPoint.transform.position;
+            }
+            _movementInput = _playerControls.Player.Move;
+            _interactionInput = _playerControls.Player.Interact;
         }
 
         private void Update()
@@ -50,12 +75,10 @@ namespace Player
             Vector2 moveInput = _movementInput.ReadValue<Vector2>(); 
             movement.Move(moveInput); 
             
-            // Check for interactions continuously
             interaction.CheckForInteractions();
             
             if (_interactionInput.triggered)
             {
-                // Perform interaction when the interact button is pressed
                 interaction.InteractWithClosest();
             }
         }
@@ -74,21 +97,21 @@ namespace Player
             }
         }
         
-        public void ChangeWeapon(GameObject newWeaponPrefab)
+        public void ChangeWeapon(Item.ItemType itemType)
         {
-            GameObject newWeapon = Instantiate(newWeaponPrefab, _weaponSlot.position, _weaponSlot.rotation, _weaponSlot);
-
-            if (_currentWeapon != null)
+            _weaponSpriteRenderer = weapon.GetComponent<SpriteRenderer>();
+            if (_weaponSpriteRenderer != null)
             {
-                Destroy(_currentWeapon);
+                _weaponSpriteRenderer.sprite = Item.GetSprite(itemType);
             }
-
-            _currentWeapon = newWeapon;
+            Debug.Log(_weaponSpriteRenderer);
+            _currentWeapon = itemType;
+            Debug.Log(_currentWeapon);
         }
 
         public void BuyItem(Item.ItemType itemType)
         {
-            Debug.Log("Bought item " + itemType);
+            ChangeWeapon(itemType);
         }
     }
 }

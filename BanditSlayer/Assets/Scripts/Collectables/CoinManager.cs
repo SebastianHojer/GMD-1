@@ -7,7 +7,7 @@ namespace Collectables
         // Singleton
         public static CoinManager Instance { get; private set; }
     
-        private int _balance = 0;
+        private int _balance = 200;
     
         public delegate void BalanceChangedEventHandler(int newBalance);
         public event BalanceChangedEventHandler OnBalanceChanged;

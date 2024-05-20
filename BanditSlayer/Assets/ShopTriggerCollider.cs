@@ -9,7 +9,6 @@ public class ShopTriggerCollider : MonoBehaviour, IInteractable
     public void Interact(GameObject interactor)
     {
         _customer = interactor.GetComponent<ICustomer>();
-        Debug.Log("Interacting with shop");
         if (_customer != null)
         {
             _shopUI.Show(_customer);
