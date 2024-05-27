@@ -22,12 +22,11 @@ namespace Movement
             var velocity = new Vector2(moveInput.x * moveSpeed, _rb.velocity.y);
             _rb.velocity = velocity;
 
-            // Flip the player if moving right and not already facing right
+            // Flip the player if moving direction and not already facing direction
             if (moveInput.x > 0 && !_isFacingRight)
             {
                 Flip();
             }
-            // Flip the player if moving left and not already facing left
             else if (moveInput.x < 0 && _isFacingRight)
             {
                 Flip();

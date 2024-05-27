@@ -1,5 +1,6 @@
 using Collectables;
 using Common;
+using JetBrains.Annotations;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -15,13 +16,16 @@ namespace Player
         
         [SerializeField] private Movement.Movement movement;
         [SerializeField] private Interaction.Interaction interaction;
+        [SerializeField] private Combat.Attack attack;
 
         private InputAction _interactionInput;
         private InputAction _movementInput;
+        private InputAction _attackInput;
         
         [SerializeField] private Transform weapon;
         private SpriteRenderer _weaponSpriteRenderer;
-        private Item.ItemType _currentWeapon;
+        private Collider2D _weaponCollider;
+        private Item.ItemType _currentWeapon = Item.ItemType.Dagger;
 
         private void Awake()
         {
@@ -37,26 +41,30 @@ namespace Player
                 Destroy(gameObject);
                 return;
             }
-            _movementInput = _playerControls.Player.Move;
-            _interactionInput = _playerControls.Player.Interact; 
+            SetupInput();
         }
         
         private void Start()
         {
             movement = GetComponent<Movement.Movement>();
             interaction = GetComponentInChildren<Interaction.Interaction>();
+            attack = GetComponent<Combat.Attack>();
+            
+            InitializeWeapon();
         }
     
         private void OnEnable()
         {
             _movementInput?.Enable();
             _interactionInput?.Enable();
+            _attackInput?.Enable();
         }
 
         private void OnDisable()
         {
             _movementInput?.Disable();
             _interactionInput?.Disable();
+            _attackInput?.Disable();
         }
         
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -66,8 +74,14 @@ namespace Player
             {
                 transform.position = spawnPoint.transform.position;
             }
+            SetupInput();
+        }
+
+        private void SetupInput()
+        {
             _movementInput = _playerControls.Player.Move;
             _interactionInput = _playerControls.Player.Interact;
+            _attackInput = _playerControls.Player.Fire;
         }
 
         private void Update()
@@ -80,6 +94,12 @@ namespace Player
             if (_interactionInput.triggered)
             {
                 interaction.InteractWithClosest();
+            }
+
+            if (_attackInput.triggered)
+            {
+                Debug.Log("Attacking");
+                attack.PerformAttack();
             }
         }
         
@@ -97,16 +117,29 @@ namespace Player
             }
         }
         
+        private void InitializeWeapon()
+        {
+            GameObject weaponPrefab = Item.GetWeaponPrefab(_currentWeapon);
+            _weaponSpriteRenderer = weapon.GetComponent<SpriteRenderer>();
+            _weaponCollider = weaponPrefab.GetComponent<Collider2D>();
+            Debug.Log("Current weapon: " + _currentWeapon);
+            Debug.Log("Sprite renderer: " + _weaponSpriteRenderer);
+            Debug.Log(_weaponCollider == null);
+            
+            attack.SetWeaponCollider(_weaponCollider);
+            attack.SetDamage(Item.GetDamage(_currentWeapon));
+        }
+        
         public void ChangeWeapon(Item.ItemType itemType)
         {
-            _weaponSpriteRenderer = weapon.GetComponent<SpriteRenderer>();
+            _currentWeapon = itemType;
+            
+            InitializeWeapon();
+            
             if (_weaponSpriteRenderer != null)
             {
                 _weaponSpriteRenderer.sprite = Item.GetSprite(itemType);
             }
-            Debug.Log(_weaponSpriteRenderer);
-            _currentWeapon = itemType;
-            Debug.Log(_currentWeapon);
         }
 
         public void BuyItem(Item.ItemType itemType)

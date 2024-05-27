@@ -44,12 +44,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea8d33d4cf0f11d47accf4aefcd69712, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  daggerSprite: {fileID: 21300266, guid: 15b2d2faaecad4bfb9edc6585d94f509, type: 3}
-  axeSprite: {fileID: 21300230, guid: 15b2d2faaecad4bfb9edc6585d94f509, type: 3}
-  katanaSprite: {fileID: 21300130, guid: 15b2d2faaecad4bfb9edc6585d94f509, type: 3}
-  maceSprite: {fileID: 21300168, guid: 15b2d2faaecad4bfb9edc6585d94f509, type: 3}
-  polearmSprite: {fileID: 21300132, guid: 15b2d2faaecad4bfb9edc6585d94f509, type: 3}
-  rodSprite: {fileID: 21300170, guid: 15b2d2faaecad4bfb9edc6585d94f509, type: 3}
-  spearSprite: {fileID: 21300134, guid: 15b2d2faaecad4bfb9edc6585d94f509, type: 3}
-  staffSprite: {fileID: 21300172, guid: 15b2d2faaecad4bfb9edc6585d94f509, type: 3}
-  swordSprite: {fileID: 21300174, guid: 15b2d2faaecad4bfb9edc6585d94f509, type: 3}
+  daggerPrefab: {fileID: 3648649660707820822, guid: 301e4c9f58ca40e42a388a4e16fd1d6c, type: 3}
+  axePrefab: {fileID: 6367500703863538413, guid: ad8b741e31df5794484ca23e3e81c8e7, type: 3}
+  katanaPrefab: {fileID: 8301036299985744665, guid: ea3df703def6b4a4aaea6e7b663108f6, type: 3}
+  macePrefab: {fileID: 2906226318496509070, guid: 0abe4ce0361fcda4db1b974ab717a6d9, type: 3}
+  polearmPrefab: {fileID: 7179646210434141474, guid: 0b1bc54ed2802be4583c0e727ecc34b2, type: 3}
+  spearPrefab: {fileID: 8013110100851913766, guid: 5367c0c2764910e49a7edcff163a1d8c, type: 3}
+  swordPrefab: {fileID: 2392868454683228736, guid: c9d6bbf58171a7f42a57b33da540323c, type: 3}

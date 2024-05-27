@@ -11,9 +11,7 @@ namespace Common
             Katana,
             Mace,
             Polearm,
-            Rod,
             Spear,
-            Staff,
             Sword,
         }
 
@@ -29,25 +27,64 @@ namespace Common
                 case ItemType.Katana: return 300;
                 case ItemType.Polearm: return 400;
                 case ItemType.Mace: return 500;
-                case ItemType.Staff: return 200;
-                case ItemType.Rod: return 1000;
             }
         }
-
-        public static Sprite GetSprite(ItemType itemType)
+        
+        public static int GetDamage(ItemType itemType)
         {
             switch (itemType)
             {
                 default:
-                    case ItemType.Dagger: return GameAssets.Instance.daggerSprite;
-                case ItemType.Axe: return GameAssets.Instance.axeSprite;
-                case ItemType.Spear: return GameAssets.Instance.spearSprite;
-                case ItemType.Sword: return GameAssets.Instance.swordSprite;
-                case ItemType.Katana: return GameAssets.Instance.katanaSprite;
-                case ItemType.Polearm: return GameAssets.Instance.polearmSprite;
-                case ItemType.Mace: return GameAssets.Instance.maceSprite;
-                case ItemType.Staff: return GameAssets.Instance.staffSprite;
-                case ItemType.Rod: return GameAssets.Instance.rodSprite;
+                case ItemType.Dagger: return 10;
+                case ItemType.Axe: return 15;
+                case ItemType.Spear: return 20;
+                case ItemType.Sword: return 25;
+                case ItemType.Katana: return 30;
+                case ItemType.Polearm: return 35;
+                case ItemType.Mace: return 40;
+            }
+        }
+        
+        public static Sprite GetSprite(ItemType itemType)
+        {
+            GameObject weaponPrefab = GetWeaponPrefab(itemType);
+            if (weaponPrefab != null)
+            {
+                return GetSpriteFromPrefab(weaponPrefab);
+            }
+            else
+            {
+                Debug.LogWarning($"Weapon prefab for {itemType} not found.");
+                return null;
+            }
+        }
+
+        public static GameObject GetWeaponPrefab(ItemType itemType)
+        {
+            switch (itemType)
+            {
+                default:
+                case ItemType.Dagger: return GameAssets.Instance.daggerPrefab;
+                case ItemType.Axe: return GameAssets.Instance.axePrefab;
+                case ItemType.Spear: return GameAssets.Instance.spearPrefab;
+                case ItemType.Sword: return GameAssets.Instance.swordPrefab;
+                case ItemType.Katana: return GameAssets.Instance.katanaPrefab;
+                case ItemType.Polearm: return GameAssets.Instance.polearmPrefab;
+                case ItemType.Mace: return GameAssets.Instance.macePrefab;
+            }
+        }
+        
+        private static Sprite GetSpriteFromPrefab(GameObject prefab)
+        {
+            SpriteRenderer spriteRenderer = prefab.GetComponent<SpriteRenderer>();
+            if (spriteRenderer != null)
+            {
+                return spriteRenderer.sprite;
+            }
+            else
+            {
+                Debug.LogWarning("SpriteRenderer not found on weapon prefab.");
+                return null;
             }
         }
     }

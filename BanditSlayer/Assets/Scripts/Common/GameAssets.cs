@@ -13,15 +13,13 @@ public class GameAssets : MonoBehaviour
         }
     }
 
-    public Sprite daggerSprite;
-    public Sprite axeSprite;
-    public Sprite katanaSprite;
-    public Sprite maceSprite;
-    public Sprite polearmSprite;
-    public Sprite rodSprite;
-    public Sprite spearSprite;
-    public Sprite staffSprite;
-    public Sprite swordSprite;
+    public GameObject daggerPrefab;
+    public GameObject axePrefab;
+    public GameObject katanaPrefab;
+    public GameObject macePrefab;
+    public GameObject polearmPrefab;
+    public GameObject spearPrefab;
+    public GameObject swordPrefab;
 }
 
 
