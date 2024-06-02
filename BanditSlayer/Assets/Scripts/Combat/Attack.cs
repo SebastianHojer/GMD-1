@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Common;
+using UnityEngine;
 
 namespace Combat
 {
@@ -26,19 +27,19 @@ namespace Combat
 
         public void PerformAttack()
         {
-            // Play the attack animation
             _animator.SetTrigger(IsAttacking);
             
-            // Check for enemies within the weapon's collider
-            if (_weaponCollider != null)
+            if (_weaponCollider)
             {
-                Collider2D[] hitEnemies = Physics2D.OverlapBoxAll(_weaponCollider.bounds.center, _weaponCollider.bounds.size, 0f);
+                var bounds = _weaponCollider.bounds;
+                Collider2D[] hitEnemies = Physics2D.OverlapBoxAll(bounds.center, bounds.size, 0f);
 
-                foreach (Collider2D enemy in hitEnemies)
+                foreach (Collider2D hitCollider in hitEnemies)
                 {
+                    Enemy.Enemy enemy = hitCollider.GetComponent<Enemy.Enemy>();
                     if (enemy.CompareTag("Enemy"))
                     {
-                        // enemy.GetComponent<Enemy>().TakeDamage(_damage);
+                        enemy.TakeDamage(_damage);
                     }
                 }
             }

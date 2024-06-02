@@ -30,7 +30,7 @@ namespace Interaction
                 if (interactable != null)
                 {
                     _closestInteractable = interactable;
-                    break; // Stop searching after finding the first interactable
+                    break;
                 }
             }
         }
