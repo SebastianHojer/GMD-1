@@ -45,6 +45,21 @@ namespace Common
             }
         }
         
+        public static float GetAttackRange(ItemType itemType)
+        {
+            switch (itemType)
+            {
+                default:
+                case ItemType.Dagger: return 1;
+                case ItemType.Axe: return 1.2f;
+                case ItemType.Spear: return 2f;
+                case ItemType.Sword: return 1.5f;
+                case ItemType.Katana: return 1.8f;
+                case ItemType.Polearm: return 2f;
+                case ItemType.Mace: return 2f;
+            }
+        }
+        
         public static Sprite GetSprite(ItemType itemType)
         {
             GameObject weaponPrefab = GetWeaponPrefab(itemType);

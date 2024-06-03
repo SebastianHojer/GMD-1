@@ -39,11 +39,6 @@ namespace Common
                 Die();
             }
         }
-        
-        public float GetCurrentHealth()
-        {
-            return currentHealth;
-        }
 
         private void UpdateHealthBar()
         {
@@ -55,7 +50,7 @@ namespace Common
 
         private void Die()
         {
-            Destroy(gameObject, 2f);
+            Destroy(gameObject, 3f);
         }
     }
 }

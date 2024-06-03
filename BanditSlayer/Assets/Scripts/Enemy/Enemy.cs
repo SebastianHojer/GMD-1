@@ -1,4 +1,5 @@
-﻿using Common;
+﻿using System.Collections;
+using Common;
 using Combat;
 using UnityEngine;
 
@@ -6,20 +7,20 @@ namespace Enemy
 {
     public class Enemy : MonoBehaviour
     {
-        public float speed = 2f;
-        public float attackRange = 1f;
-        public float attackCooldown = 1f;
-        public int damage = 10;
+        public float speed;
+        public float attackCooldown;
 
+        private float _attackRange;
         private bool _isFacingRight;
         private Transform _player;
         private Animator _animator;
         private Health _health;
         private Attack _attack;
         private float _lastAttackTime;
-        private bool _isDead;
         private Collider2D _weaponCollider;
-
+        private bool _isDead;
+        private bool _isAttacking;
+        
         [SerializeField] private Item.ItemType currentWeapon;
         
         private static readonly int IsMoving = Animator.StringToHash("isMoving");
@@ -40,16 +41,14 @@ namespace Enemy
 
             InitializeWeapon();
             SubscribeToHealthEvents();
-            SubscribeToAttackEvents();
         }
 
         private void InitializeWeapon()
         {
-            GameObject weaponPrefab = Item.GetWeaponPrefab(currentWeapon);
-            _weaponCollider = weaponPrefab.GetComponent<Collider2D>();
-            
-            _attack.SetWeaponCollider(_weaponCollider);
-            _attack.SetDamage(Item.GetDamage(currentWeapon));
+            _attackRange = Item.GetAttackRange(currentWeapon);
+            int damage = Item.GetDamage(currentWeapon);
+            _attack.SetAttackRange(_attackRange);
+            _attack.SetDamage(damage);
         }
 
         private void Update()
@@ -59,7 +58,7 @@ namespace Enemy
 
             float distanceToPlayer = Vector2.Distance(transform.position, _player.position);
 
-            if (distanceToPlayer > attackRange)
+            if (distanceToPlayer > _attackRange)
             {
                 MoveTowardsPlayer();
             }
@@ -95,11 +94,21 @@ namespace Enemy
 
         private void AttackPlayer()
         {
-            if (Time.time - _lastAttackTime > attackCooldown)
+            if (Time.time - _lastAttackTime > attackCooldown && !_isAttacking)
             {
                 _lastAttackTime = Time.time;
-                _attack.PerformAttack();
+                StartCoroutine(PerformAttackAfterAnimation());
             }
+        }
+
+        private IEnumerator PerformAttackAfterAnimation()
+        {
+            _isAttacking = true;
+            _animator.SetTrigger(IsAttacking);
+            // Wait for 80% of the animation length before performing the attack
+            yield return new WaitForSeconds(_animator.GetCurrentAnimatorStateInfo(0).length * 0.8f);
+            _attack.PerformAttack();
+            _isAttacking = false;
         }
 
         private void SubscribeToHealthEvents()
@@ -121,19 +130,6 @@ namespace Enemy
             _isDead = true;
             _animator.SetTrigger(IsDead);
             Destroy(gameObject, 2f);
-        }
-
-        private void SubscribeToAttackEvents()
-        {
-            if (_attack != null)
-            {
-                _attack.OnAttack += HandleAttack;
-            }
-        }
-
-        private void HandleAttack()
-        {
-            _animator.SetTrigger(IsAttacking);
         }
     }
 }

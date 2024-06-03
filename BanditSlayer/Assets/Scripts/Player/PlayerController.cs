@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using Collectables;
 using Common;
 using JetBrains.Annotations;
@@ -11,6 +13,8 @@ namespace Player
     public class PlayerController : MonoBehaviour, ICustomer
     {
         private static PlayerController _instance;
+        
+        public float attackCooldown = 1f;
         
         private PlayerInputActions _playerControls;
 
@@ -28,6 +32,9 @@ namespace Player
         private Combat.Attack _attack;
         private Health _health;
         private Animator _animator;
+        private float _lastAttackTime;
+        private bool _isDead = false;
+        private bool _isAttacking;
         
         private static readonly int IsHurt = Animator.StringToHash("isHurt");
         private static readonly int IsDead = Animator.StringToHash("isDead");
@@ -60,7 +67,6 @@ namespace Player
             
             InitializeWeapon();
             SubscribeToHealthEvents();
-            SubscribeToAttackEvents();
         }
     
         private void OnEnable()
@@ -108,9 +114,27 @@ namespace Player
 
             if (_attackInput.triggered)
             {
-                Debug.Log("Attacking");
-                _attack.PerformAttack();
+                Attack();
             }
+        }
+        
+        private void Attack()
+        {
+            if (Time.time - _lastAttackTime > attackCooldown && !_isAttacking)
+            {
+                _lastAttackTime = Time.time;
+                StartCoroutine(PerformAttackAfterAnimation());
+            }
+        }
+
+        private IEnumerator PerformAttackAfterAnimation()
+        {
+            _isAttacking = true;
+            _animator.SetTrigger(IsAttacking);
+            // Wait for 80% of the animation length before performing the attack
+            yield return new WaitForSeconds(_animator.GetCurrentAnimatorStateInfo(0).length * 0.8f);
+            _attack.PerformAttack();
+            _isAttacking = false;
         }
         
         private void OnTriggerEnter2D(Collider2D other)
@@ -130,23 +154,25 @@ namespace Player
         private void InitializeWeapon()
         {
             GameObject weaponPrefab = Item.GetWeaponPrefab(_currentWeapon);
-            _weaponSpriteRenderer = weapon.GetComponent<SpriteRenderer>();
-            _weaponCollider = weaponPrefab.GetComponent<Collider2D>();
+            GameObject weaponInstance = Instantiate(weaponPrefab, weapon.position, weapon.rotation, weapon);
+            float attackRange = Item.GetAttackRange(_currentWeapon);
+            _weaponSpriteRenderer = weaponInstance.GetComponent<SpriteRenderer>();
+            _weaponSpriteRenderer.sortingLayerName = "Foreground";
+            _weaponSpriteRenderer.material = new Material(Shader.Find("Sprites/Default"));
             
-            _attack.SetWeaponCollider(_weaponCollider);
+            _attack.SetAttackRange(attackRange);
             _attack.SetDamage(Item.GetDamage(_currentWeapon));
         }
         
         public void ChangeWeapon(Item.ItemType itemType)
         {
-            _currentWeapon = itemType;
-            
-            InitializeWeapon();
-            
             if (_weaponSpriteRenderer != null)
             {
-                _weaponSpriteRenderer.sprite = Item.GetSprite(itemType);
+                Destroy(_weaponSpriteRenderer.gameObject);
             }
+            
+            _currentWeapon = itemType;
+            InitializeWeapon();
         }
 
         public void BuyItem(Item.ItemType itemType)
@@ -170,20 +196,12 @@ namespace Player
 
         private void HandleDie()
         {
-            _animator.SetTrigger(IsDead);
-        }
-        
-        private void SubscribeToAttackEvents()
-        {
-            if (_attack != null)
+            if (!_isDead)
             {
-                _attack.OnAttack += HandleAttack;
+                _isDead = true;
+                _animator.SetTrigger(IsDead);
+                OnDisable();
             }
-        }
-
-        private void HandleAttack()
-        {
-            _animator.SetTrigger(IsAttacking);
         }
     }
 }

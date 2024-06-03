@@ -6,14 +6,14 @@ namespace Combat
 {
     public class Attack : MonoBehaviour
     {
-        private Collider2D _weaponCollider;
+        private float _attackRange;
         private int _damage;
 
         public event Action OnAttack;
 
-        public void SetWeaponCollider(Collider2D weaponCollider)
+        public void SetAttackRange(float attackRange)
         {
-            _weaponCollider = weaponCollider;
+            _attackRange = attackRange;
         }
 
         public void SetDamage(int damage)
@@ -24,24 +24,26 @@ namespace Combat
         public void PerformAttack()
         {
             OnAttack?.Invoke();
-            
-            if (_weaponCollider)
-            {
-                var bounds = _weaponCollider.bounds;
-                Collider2D[] hitEnemies = Physics2D.OverlapBoxAll(bounds.center, bounds.size, 0f);
+            Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(transform.position, _attackRange);
 
-                foreach (Collider2D hitCollider in hitEnemies)
+            foreach (Collider2D hitCollider in hitEnemies)
+            {
+                Debug.Log("Hit: " + hitCollider.gameObject.name);
+                if (CompareTag("Player") && !hitCollider.CompareTag("Enemy"))
                 {
-                    if (CompareTag("Enemy") && !hitCollider.CompareTag("Player"))
-                    {
-                        continue;
-                    }
-                    
-                    var health = hitCollider.GetComponent<Health>();
-                    if (health != null)
-                    {
-                        health.TakeDamage(_damage);
-                    }
+                    continue;
+                }
+                
+                if (CompareTag("Enemy") && !hitCollider.CompareTag("Player"))
+                {
+                    continue;
+                }
+                
+                var health = hitCollider.GetComponent<Health>();
+                if (health)
+                {
+                    Debug.Log(gameObject.name + " attacked " + hitCollider.gameObject.name);
+                    health.TakeDamage(_damage);
                 }
             }
         }
