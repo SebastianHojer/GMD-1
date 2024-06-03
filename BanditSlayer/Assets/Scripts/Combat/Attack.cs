@@ -1,19 +1,15 @@
-﻿using Common;
+﻿using System;
+using Common;
 using UnityEngine;
 
 namespace Combat
 {
     public class Attack : MonoBehaviour
     {
-        private Animator _animator;
-        private static readonly int IsAttacking = Animator.StringToHash("isAttacking");
         private Collider2D _weaponCollider;
         private int _damage;
 
-        private void Awake()
-        {
-            _animator = GetComponent<Animator>();
-        }
+        public event Action OnAttack;
 
         public void SetWeaponCollider(Collider2D weaponCollider)
         {
@@ -27,7 +23,7 @@ namespace Combat
 
         public void PerformAttack()
         {
-            _animator.SetTrigger(IsAttacking);
+            OnAttack?.Invoke();
             
             if (_weaponCollider)
             {
@@ -36,10 +32,15 @@ namespace Combat
 
                 foreach (Collider2D hitCollider in hitEnemies)
                 {
-                    Enemy.Enemy enemy = hitCollider.GetComponent<Enemy.Enemy>();
-                    if (enemy.CompareTag("Enemy"))
+                    if (CompareTag("Enemy") && !hitCollider.CompareTag("Player"))
                     {
-                        enemy.TakeDamage(_damage);
+                        continue;
+                    }
+                    
+                    var health = hitCollider.GetComponent<Health>();
+                    if (health != null)
+                    {
+                        health.TakeDamage(_damage);
                     }
                 }
             }

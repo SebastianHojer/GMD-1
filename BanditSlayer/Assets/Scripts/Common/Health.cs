@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Common
@@ -9,16 +10,9 @@ namespace Common
         private float currentHealth;
         public Slider healthBar;
         
-        private Animator animator;
-
-        private static readonly int IsHurt = Animator.StringToHash("isHurt");
-        private static readonly int IsDead = Animator.StringToHash("isDead");
+        public event Action OnHurt;
+        public event Action OnDie;
         private bool isDead = false;
-        
-        private void Awake()
-        {
-            animator = GetComponent<Animator>();
-        }
         
         private void Start()
         {
@@ -36,12 +30,12 @@ namespace Common
 
             if (currentHealth > 0)
             {
-                animator.SetTrigger(IsHurt);
+                OnHurt?.Invoke();
             }
             else
             {
                 isDead = true;
-                animator.SetTrigger(IsDead);
+                OnDie?.Invoke();
                 Die();
             }
         }

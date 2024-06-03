@@ -10,13 +10,9 @@ namespace Player
 {
     public class PlayerController : MonoBehaviour, ICustomer
     {
-        private static PlayerController instance;
+        private static PlayerController _instance;
         
         private PlayerInputActions _playerControls;
-        
-        [SerializeField] private Movement.Movement movement;
-        [SerializeField] private Interaction.Interaction interaction;
-        [SerializeField] private Combat.Attack attack;
 
         private InputAction _interactionInput;
         private InputAction _movementInput;
@@ -26,17 +22,27 @@ namespace Player
         private SpriteRenderer _weaponSpriteRenderer;
         private Collider2D _weaponCollider;
         private Item.ItemType _currentWeapon = Item.ItemType.Dagger;
+        
+        private Movement.Movement _movement;
+        private Interaction.Interaction _interaction;
+        private Combat.Attack _attack;
+        private Health _health;
+        private Animator _animator;
+        
+        private static readonly int IsHurt = Animator.StringToHash("isHurt");
+        private static readonly int IsDead = Animator.StringToHash("isDead");
+        private static readonly int IsAttacking = Animator.StringToHash("isAttacking");
 
         private void Awake()
         {
-            if (instance == null)
+            if (_instance == null)
             {
-                instance = this;
+                _instance = this;
                 DontDestroyOnLoad(gameObject);
                 _playerControls = new PlayerInputActions();
                 SceneManager.sceneLoaded += OnSceneLoaded;
             }
-            else if (instance != this)
+            else if (_instance != this)
             {
                 Destroy(gameObject);
                 return;
@@ -46,11 +52,15 @@ namespace Player
         
         private void Start()
         {
-            movement = GetComponent<Movement.Movement>();
-            interaction = GetComponentInChildren<Interaction.Interaction>();
-            attack = GetComponent<Combat.Attack>();
+            _movement = GetComponent<Movement.Movement>();
+            _interaction = GetComponentInChildren<Interaction.Interaction>();
+            _attack = GetComponent<Combat.Attack>();
+            _health = GetComponent<Health>();
+            _animator = GetComponent<Animator>();
             
             InitializeWeapon();
+            SubscribeToHealthEvents();
+            SubscribeToAttackEvents();
         }
     
         private void OnEnable()
@@ -87,19 +97,19 @@ namespace Player
         private void Update()
         {
             Vector2 moveInput = _movementInput.ReadValue<Vector2>(); 
-            movement.Move(moveInput); 
+            _movement.Move(moveInput); 
             
-            interaction.CheckForInteractions();
+            _interaction.CheckForInteractions();
             
             if (_interactionInput.triggered)
             {
-                interaction.InteractWithClosest();
+                _interaction.InteractWithClosest();
             }
 
             if (_attackInput.triggered)
             {
                 Debug.Log("Attacking");
-                attack.PerformAttack();
+                _attack.PerformAttack();
             }
         }
         
@@ -122,12 +132,9 @@ namespace Player
             GameObject weaponPrefab = Item.GetWeaponPrefab(_currentWeapon);
             _weaponSpriteRenderer = weapon.GetComponent<SpriteRenderer>();
             _weaponCollider = weaponPrefab.GetComponent<Collider2D>();
-            Debug.Log("Current weapon: " + _currentWeapon);
-            Debug.Log("Sprite renderer: " + _weaponSpriteRenderer);
-            Debug.Log(_weaponCollider == null);
             
-            attack.SetWeaponCollider(_weaponCollider);
-            attack.SetDamage(Item.GetDamage(_currentWeapon));
+            _attack.SetWeaponCollider(_weaponCollider);
+            _attack.SetDamage(Item.GetDamage(_currentWeapon));
         }
         
         public void ChangeWeapon(Item.ItemType itemType)
@@ -145,6 +152,38 @@ namespace Player
         public void BuyItem(Item.ItemType itemType)
         {
             ChangeWeapon(itemType);
+        }
+        
+        private void SubscribeToHealthEvents()
+        {
+            if (_health != null)
+            {
+                _health.OnHurt += HandleHurt;
+                _health.OnDie += HandleDie;
+            }
+        }
+
+        private void HandleHurt()
+        {
+            _animator.SetTrigger(IsHurt);
+        }
+
+        private void HandleDie()
+        {
+            _animator.SetTrigger(IsDead);
+        }
+        
+        private void SubscribeToAttackEvents()
+        {
+            if (_attack != null)
+            {
+                _attack.OnAttack += HandleAttack;
+            }
+        }
+
+        private void HandleAttack()
+        {
+            _animator.SetTrigger(IsAttacking);
         }
     }
 }
