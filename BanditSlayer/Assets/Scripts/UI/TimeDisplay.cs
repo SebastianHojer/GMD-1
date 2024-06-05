@@ -45,17 +45,20 @@ namespace UI
             }
         }
 
-        private void RoundOver()
+        private void RoundOver(bool won)
         {
             roundOver = true;
-            timeText.text = "All enemies defeated! Returning to town.";
-            StartCoroutine(RemoveTextAfterDelay(2));
+            if (won)
+            {
+                 timeText.text = "All enemies defeated! Returning to town.";
+                 StartCoroutine(Delay(2));
+            }
+            timeText.text = " ";
         }
         
-        private IEnumerator RemoveTextAfterDelay(float delay)
+        private IEnumerator Delay(float delay)
         {
             yield return new WaitForSeconds(delay);
-            timeText.text = "";
         }
     }
 }

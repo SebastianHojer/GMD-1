@@ -14,7 +14,7 @@ namespace GameLogic
         public SceneReference BattlefieldSceneReference;
         public SceneReference TownSceneReference;
         public Action<float> OnRoundStart;
-        public Action OnRoundOver;
+        public Action<bool> OnRoundOver;
         [SerializeField] private List<GameObject> enemyPrefabs;
         [SerializeField] private Transform[] spawnPoints;
         private float _spawnRate = 15f;
@@ -82,7 +82,7 @@ namespace GameLogic
                 _spawnRate -= 0.5f;
             }
             
-            OnRoundOver.Invoke();
+            OnRoundOver.Invoke(true);
 
             Invoke(nameof(LoadTownScene), 3f);
         }
@@ -97,7 +97,7 @@ namespace GameLogic
             _damageModifier = 0.25f;
             _spawnRate = 15f;
             _roundOver = true;
-            OnRoundOver.Invoke();
+            OnRoundOver.Invoke(false);
             foreach (var enemy in GameObject.FindGameObjectsWithTag("Enemy"))
             {
                 Destroy(enemy);

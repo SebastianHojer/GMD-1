@@ -46,6 +46,8 @@ namespace Player
                 DontDestroyOnLoad(gameObject);
                 _playerControls = new PlayerInputActions();
                 SceneManager.sceneLoaded += OnSceneLoaded;
+                
+                var gm = GameManager.Instance;
             }
             else if (Instance != this)
             {
@@ -211,7 +213,7 @@ namespace Player
             _isDead = false;
             ChangeWeapon(Item.ItemType.Dagger);
             _health.AddHealth(100);
-            _animator.ResetTrigger(IsDead);
+            _animator.Rebind();
             OnEnable();
         }
     }

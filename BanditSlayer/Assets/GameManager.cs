@@ -25,7 +25,6 @@ public class GameManager : MonoBehaviour
     {
         if (Player.PlayerController.Instance.PlayerIsDead())
         {
-            Debug.Log("Load gameover screen");
             LoadGameOverScreen();
         }
     }
