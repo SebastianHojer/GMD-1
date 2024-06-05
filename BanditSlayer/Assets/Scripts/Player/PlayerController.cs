@@ -212,7 +212,7 @@ namespace Player
         {
             _isDead = false;
             ChangeWeapon(Item.ItemType.Dagger);
-            _health.AddHealth(100);
+            _health.Reset();
             _animator.Rebind();
             OnEnable();
         }

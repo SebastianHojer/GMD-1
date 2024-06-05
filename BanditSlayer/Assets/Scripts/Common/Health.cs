@@ -40,5 +40,12 @@ namespace Common
             _currentHealth = Mathf.Clamp(_currentHealth, 0, maxHealth);
             OnHealthChanged?.Invoke(_currentHealth, maxHealth);
         }
+
+        public void Reset()
+        {
+            _isDead = false;
+            _currentHealth = maxHealth;
+            OnHealthChanged?.Invoke(_currentHealth, maxHealth);
+        }
     }
 }

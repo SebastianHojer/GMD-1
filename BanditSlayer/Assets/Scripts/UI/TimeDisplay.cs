@@ -20,12 +20,18 @@ namespace UI
             roundManager.OnRoundStart += StartCountdown;
             roundManager.OnRoundOver += RoundOver;
         }
+        
+        private void OnDestroy()
+        {
+            roundManager.OnRoundStart -= StartCountdown;
+            roundManager.OnRoundOver -= RoundOver;
+        }
 
         private void StartCountdown(float duration)
         {
             roundStarted = true;
             roundOver = false;
-            countdown = duration;
+            countdown = duration; 
         }
 
         private void Update()
@@ -42,23 +48,14 @@ namespace UI
             else if(roundStarted && !roundOver)
             {
                 timeText.text = "Defeat the remaining enemies!";
+                roundOver = true;
             }
         }
 
-        private void RoundOver(bool won)
+        private void RoundOver()
         {
             roundOver = true;
-            if (won)
-            {
-                 timeText.text = "All enemies defeated! Returning to town.";
-                 StartCoroutine(Delay(2));
-            }
-            timeText.text = " ";
-        }
-        
-        private IEnumerator Delay(float delay)
-        {
-            yield return new WaitForSeconds(delay);
+            timeText.text = "";
         }
     }
 }

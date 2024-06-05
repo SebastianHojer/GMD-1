@@ -170,11 +170,6 @@ namespace UI
                 _messageToShow = null;
             }
         }
-
-        private void OnDestroy()
-        {
-            Debug.Log("Shop_UI was destroyed.");
-        }
         
         public void ResetShop()
         {

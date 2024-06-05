@@ -7,7 +7,7 @@ namespace GameLogic
         // Singleton
         public static CoinManager Instance { get; private set; }
     
-        private int _balance = 200;
+        private int _balance;
     
         public delegate void BalanceChangedEventHandler(int newBalance);
         public event BalanceChangedEventHandler OnBalanceChanged;

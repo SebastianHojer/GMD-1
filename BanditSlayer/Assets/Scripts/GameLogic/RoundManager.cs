@@ -14,13 +14,14 @@ namespace GameLogic
         public SceneReference BattlefieldSceneReference;
         public SceneReference TownSceneReference;
         public Action<float> OnRoundStart;
-        public Action<bool> OnRoundOver;
+        public Action OnRoundOver;
         [SerializeField] private List<GameObject> enemyPrefabs;
         [SerializeField] private Transform[] spawnPoints;
         private float _spawnRate = 15f;
         private const float RoundDuration = 60f;
-        private float _damageModifier = 0.25f;
+        private float _damageModifier = 0.35f;
         private bool _roundOver;
+        private Coroutine roundCoroutine;
         
         private void Awake()
         {
@@ -40,7 +41,7 @@ namespace GameLogic
         {
             if (scene.name == BattlefieldSceneReference.sceneName)
             {
-                StartCoroutine(RoundCoroutine());
+                roundCoroutine = StartCoroutine(RoundCoroutine());
                 _roundOver = false;
             }
         }
@@ -82,9 +83,9 @@ namespace GameLogic
                 _spawnRate -= 0.5f;
             }
             
-            OnRoundOver.Invoke(true);
+            OnRoundOver.Invoke();
 
-            Invoke(nameof(LoadTownScene), 3f);
+            LoadTownScene();
         }
 
         private void LoadTownScene()
@@ -94,14 +95,21 @@ namespace GameLogic
 
         public void ResetRoundManager()
         {
+            if (roundCoroutine != null)
+            {
+                StopCoroutine(roundCoroutine);
+                roundCoroutine = null;
+            }
             _damageModifier = 0.25f;
             _spawnRate = 15f;
-            _roundOver = true;
-            OnRoundOver.Invoke(false);
+            _roundOver = true; 
+            OnRoundOver.Invoke();
             foreach (var enemy in GameObject.FindGameObjectsWithTag("Enemy"))
             {
-                Destroy(enemy);
+                if(enemy != null)
+                    Destroy(enemy);
             }
+            _roundOver = false;
         }
     }
 }
