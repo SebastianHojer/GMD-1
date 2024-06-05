@@ -17,11 +17,15 @@ namespace UI
                 _health.OnHealthChanged += UpdateHealthBar;
                 UpdateHealthBar(_health.maxHealth, _health.maxHealth);
             }
+            DontDestroyOnLoad(gameObject);
         }
 
         private void OnDestroy()
         {
-            _health.OnHealthChanged -= UpdateHealthBar;
+            if (_health)
+            {
+                _health.OnHealthChanged -= UpdateHealthBar;   
+            }
         }
 
         private void UpdateHealthBar(float currentHealth, float maxHealth)

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Common;
 using GameLogic;
 using TMPro;
@@ -9,19 +10,31 @@ namespace UI
 {
     public class Shop_UI : MonoBehaviour
     {
+        public static Shop_UI Instance { get; private set; }
         private Transform _container;
         private Transform _shopItemTemplate;
         private ICustomer _customer;
         private bool _shown;
         private string _messageToShow;
         private Button _firstButton;
-
+        private Item.ItemType _currentWeapon = Item.ItemType.Dagger;
+        private Dictionary<Item.ItemType, Button> _itemButtons = new();
+        private Dictionary<Item.ItemType, TextMeshProUGUI> _itemPrices = new();
+        
         private void Awake()
         {
-            _container = transform.Find("container");
-            _shopItemTemplate = _container.Find("shopItemTemplate");
-            _shopItemTemplate.gameObject.SetActive(false);
-            _shown = false;
+            if (Instance == null)
+            {
+                Instance = this;
+                _container = transform.Find("container");
+                _shopItemTemplate = _container.Find("shopItemTemplate");
+                _shopItemTemplate.gameObject.SetActive(false);
+                _shown = false;
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
         }
 
         private void Start()
@@ -49,11 +62,21 @@ namespace UI
             shopItemRectTransform.anchoredPosition = new Vector2(0, -shopItemHeight * positionIndex);
         
             shopItemTransform.Find("nameText").GetComponent<TextMeshProUGUI>().SetText(itemName);
-            shopItemTransform.Find("priceText").GetComponent<TextMeshProUGUI>().SetText(itemCost.ToString());
+            var itemPrice = shopItemTransform.Find("priceText").GetComponent<TextMeshProUGUI>();
+            itemPrice.SetText(itemCost.ToString());
+            _itemPrices[itemType] = itemPrice;
             shopItemTransform.Find("itemImage").GetComponent<Image>().sprite = itemSprite;
 
             Button itemButton = shopItemTransform.GetComponent<Button>();
             itemButton.onClick.AddListener(onClickCallback.Invoke);
+            _itemButtons[itemType] = itemButton;
+            
+            // If the item is the default weapon (Dagger), disable the button and remove the price
+            if (itemType == _currentWeapon)
+            {
+                itemButton.interactable = false;
+                itemPrice.SetText("");
+            }
         
             if (_firstButton == null)
             {
@@ -78,6 +101,23 @@ namespace UI
             {
                 Debug.Log("Successfully purchased item: " + itemType);
                 _customer.BuyItem(itemType);
+                if (_itemButtons.TryGetValue(_currentWeapon, out var oldButton))
+                {
+                    oldButton.interactable = true;
+                }
+                if (_itemPrices.TryGetValue(_currentWeapon, out var oldPriceText))
+                {
+                    oldPriceText.SetText(Item.GetCost(_currentWeapon).ToString());
+                }
+                if (_itemButtons.TryGetValue(itemType, out var newButton))
+                {
+                    newButton.interactable = false;
+                }
+                if (_itemPrices.TryGetValue(itemType, out var priceText))
+                {
+                    priceText.SetText("");
+                }
+                _currentWeapon = itemType;
             }
             else
             {
@@ -128,6 +168,29 @@ namespace UI
                 style.alignment = TextAnchor.MiddleCenter;
                 GUI.Label(new Rect(0, 0, Screen.width, Screen.height), _messageToShow, style);
                 _messageToShow = null;
+            }
+        }
+        
+        public void ResetShop()
+        {
+            _currentWeapon = Item.ItemType.Dagger;
+
+            foreach (var button in _itemButtons.Values)
+            {
+                button.interactable = true;
+            }
+            foreach (var item in _itemPrices.Keys)
+            {
+                _itemPrices[item].SetText(Item.GetCost(item).ToString());
+            }
+
+            if (_itemButtons.TryGetValue(_currentWeapon, out var defaultButton))
+            {
+                defaultButton.interactable = false;
+            }
+            if (_itemPrices.TryGetValue(_currentWeapon, out var defaultPriceText))
+            {
+                defaultPriceText.SetText("");
             }
         }
     }

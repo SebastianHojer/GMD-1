@@ -6,14 +6,11 @@ namespace Interaction
     public class Interaction : MonoBehaviour
     {
         private IInteractable _closestInteractable;
-        
-        private LayerMask _interactionLayer;
 
         [SerializeField] private GameObject interactor;
 
         private void Start()
         {
-            _interactionLayer = LayerMask.GetMask("Interactable");
             interactor = transform.parent.gameObject;
         }
 
@@ -54,7 +51,7 @@ namespace Interaction
                 GUIStyle style = GUI.skin.label;
                 style.fontSize = 20;
                 style.alignment = TextAnchor.MiddleCenter;
-                GUI.Label(new Rect(x, y, labelWidth, labelHeight), "[Press E to interact]", style);
+                GUI.Label(new Rect(x, y, labelWidth, labelHeight), "[Press to interact]", style);
             }
         }
     }

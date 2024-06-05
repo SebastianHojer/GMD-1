@@ -189,6 +189,11 @@ namespace Player
                 _health.OnDie += HandleDie;
             }
         }
+        
+        public bool PlayerIsDead()
+        {
+            return _isDead;
+        }
 
         private void HandleDie()
         {
@@ -197,7 +202,17 @@ namespace Player
                 _isDead = true;
                 _animator.SetTrigger(IsDead);
                 OnDisable();
+                GameManager.Instance.CheckPlayerDeath();
             }
+        }
+        
+        public void ResetPlayer()
+        {
+            _isDead = false;
+            ChangeWeapon(Item.ItemType.Dagger);
+            _health.AddHealth(100);
+            _animator.ResetTrigger(IsDead);
+            OnEnable();
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using Common;
 using Interaction;
 using UI;
@@ -8,8 +9,13 @@ namespace Shop
 {
     public class ShopTriggerCollider : MonoBehaviour, IInteractable
     {
-        [FormerlySerializedAs("_shopUI")] [SerializeField] private Shop_UI shopUI;
+        private Shop_UI shopUI;
         private ICustomer _customer;
+
+        private void Awake()
+        {
+            shopUI = Shop_UI.Instance;
+        }
 
         public void Interact(GameObject interactor)
         {
