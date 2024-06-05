@@ -38,6 +38,7 @@ namespace Common
         {
             _currentHealth += amount;
             _currentHealth = Mathf.Clamp(_currentHealth, 0, maxHealth);
+            OnHealthChanged?.Invoke(_currentHealth, maxHealth);
         }
     }
 }

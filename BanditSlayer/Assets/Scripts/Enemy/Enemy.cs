@@ -132,17 +132,26 @@ namespace Enemy
         {
             _isDead = true;
             _animator.SetTrigger(IsDead);
+            
+            float yOffset = 2f;
+            
             // Drop coins
-            int numCoins = Random.Range(1, 6); // Random number between 1 and 5
+            int numCoins = Random.Range(1, 6);
             for (int i = 0; i < numCoins; i++)
             {
-                Instantiate(coinPrefab, transform.position, Quaternion.identity);
+                float xOffset = Random.Range(-5f, 5f);
+                Vector3 position = new Vector3(transform.position.x + xOffset, transform.position.y + yOffset, transform.position.z);
+                var coin = Instantiate(coinPrefab, position, Quaternion.identity);
+                coin.GetComponent<Renderer>().material = new Material(Shader.Find("Sprites/Default"));
             }
 
             // Drop healing item
-            if (Random.value < 0.5f) // 50% chance to drop a healing item
+            if (Random.value < 0.5f)
             {
-                Instantiate(healingItemPrefab, transform.position, Quaternion.identity);
+                float xOffset = Random.Range(-5f, 5f);
+                Vector3 position = new Vector3(transform.position.x + xOffset, transform.position.y + yOffset, transform.position.z);
+                var healingItem = Instantiate(healingItemPrefab, position, Quaternion.identity);
+                healingItem.GetComponent<Renderer>().material = new Material(Shader.Find("Sprites/Default"));
             }
             Destroy(gameObject, 2f);
         }

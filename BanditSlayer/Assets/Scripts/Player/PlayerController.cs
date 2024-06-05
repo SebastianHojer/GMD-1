@@ -144,11 +144,13 @@ namespace Player
             {
                 Destroy(other.GameObject());
                 CoinManager.Instance.AddToBalance(1);
+                Debug.Log("+1 coin");
             }
             else if (other.CompareTag("Healing"))
             {
                 Destroy(other.GameObject());
                 _health.AddHealth(25);
+                Debug.Log("Healed");
             }
         }
         

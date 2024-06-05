@@ -25,6 +25,7 @@ namespace UI
 
         private void Update()
         {
+            Debug.Log("Countdown: " + countdown);
             if (countdown > 0)
             {
                 countdown -= Time.deltaTime;

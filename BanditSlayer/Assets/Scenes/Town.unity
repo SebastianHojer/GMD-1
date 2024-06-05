@@ -878,7 +878,7 @@ MonoBehaviour:
   BattlefieldSceneReference: {fileID: 11400000, guid: 64db340620abaaa49ac39b4a23cf9cdd, type: 2}
   enemyPrefabs:
   - {fileID: 5147350785142548438, guid: a1f16d3499fcdd94a95c88f308f10c35, type: 3}
-  - {fileID: 4891122354040128532, guid: 2157b9d3d40b2874da4787ec8f53296e, type: 3}
+  - {fileID: 5147350785142548438, guid: e7e7c96005a67b14191c123f9abdfcf9, type: 3}
   spawnPoints:
   - {fileID: 6523859816803314903, guid: 0f79b09d1a0e0bb4f9d0bb02fb8cb0e8, type: 3}
   - {fileID: 7376199994135472765, guid: a91ed6d837cc4a246ba40c0ea04c9471, type: 3}
