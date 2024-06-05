@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Collectables
+namespace GameLogic
 {
     public class CoinManager : MonoBehaviour
     {

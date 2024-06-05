@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using Collectables;
 using Common;
+using GameLogic;
 using JetBrains.Annotations;
 using Unity.VisualScripting;
 using UnityEngine;

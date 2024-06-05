@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Interactables
+namespace Interaction
 {
     public interface IInteractable
     {

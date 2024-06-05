@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using Interactables;
+using Interaction;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
