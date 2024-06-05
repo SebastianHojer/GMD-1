@@ -6,51 +6,38 @@ namespace Common
 {
     public class Health : MonoBehaviour
     {
-        public float maxHealth = 100f;
-        private float currentHealth;
-        public Slider healthBar;
+        public float maxHealth;
+        private float _currentHealth;
         
-        public event Action OnHurt;
+        public event Action<float, float> OnHealthChanged;
         public event Action OnDie;
-        private bool isDead = false;
+        private bool _isDead = false;
         
         private void Start()
         {
-            currentHealth = maxHealth;
-            UpdateHealthBar();
+            _currentHealth = maxHealth;
+            OnHealthChanged?.Invoke(_currentHealth, maxHealth);
         }
 
         public void TakeDamage(float amount)
         {
-            if (isDead) return;
+            if (_isDead) return;
             
-            currentHealth -= amount;
-            currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
-            UpdateHealthBar();
+            _currentHealth -= amount;
+            _currentHealth = Mathf.Clamp(_currentHealth, 0, maxHealth);
+            OnHealthChanged?.Invoke(_currentHealth, maxHealth);
 
-            if (currentHealth > 0)
+            if(_currentHealth <= 0)
             {
-                OnHurt?.Invoke();
-            }
-            else
-            {
-                isDead = true;
+                _isDead = true;
                 OnDie?.Invoke();
-                Die();
             }
         }
 
-        private void UpdateHealthBar()
+        public void AddHealth(float amount)
         {
-            if (healthBar)
-            {
-                healthBar.value = currentHealth / maxHealth;
-            }
-        }
-
-        private void Die()
-        {
-            Destroy(gameObject, 3f);
+            _currentHealth += amount;
+            _currentHealth = Mathf.Clamp(_currentHealth, 0, maxHealth);
         }
     }
 }

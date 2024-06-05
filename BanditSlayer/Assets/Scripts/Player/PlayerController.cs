@@ -12,9 +12,9 @@ namespace Player
 {
     public class PlayerController : MonoBehaviour, ICustomer
     {
-        private static PlayerController _instance;
+        public static PlayerController Instance { get; private set; }
         
-        public float attackCooldown = 1f;
+        public float attackCooldown;
         
         private PlayerInputActions _playerControls;
 
@@ -33,23 +33,21 @@ namespace Player
         private Health _health;
         private Animator _animator;
         private float _lastAttackTime;
-        private bool _isDead = false;
-        private bool _isAttacking;
+        private bool _isDead;
         
-        private static readonly int IsHurt = Animator.StringToHash("isHurt");
         private static readonly int IsDead = Animator.StringToHash("isDead");
         private static readonly int IsAttacking = Animator.StringToHash("isAttacking");
 
         private void Awake()
         {
-            if (_instance == null)
+            if (Instance == null)
             {
-                _instance = this;
+                Instance = this;
                 DontDestroyOnLoad(gameObject);
                 _playerControls = new PlayerInputActions();
                 SceneManager.sceneLoaded += OnSceneLoaded;
             }
-            else if (_instance != this)
+            else if (Instance != this)
             {
                 Destroy(gameObject);
                 return;
@@ -120,7 +118,7 @@ namespace Player
         
         private void Attack()
         {
-            if (Time.time - _lastAttackTime > attackCooldown && !_isAttacking)
+            if (Time.time - _lastAttackTime > attackCooldown)
             {
                 _lastAttackTime = Time.time;
                 StartCoroutine(PerformAttackAfterAnimation());
@@ -129,12 +127,10 @@ namespace Player
 
         private IEnumerator PerformAttackAfterAnimation()
         {
-            _isAttacking = true;
             _animator.SetTrigger(IsAttacking);
             // Wait for 80% of the animation length before performing the attack
             yield return new WaitForSeconds(_animator.GetCurrentAnimatorStateInfo(0).length * 0.8f);
             _attack.PerformAttack();
-            _isAttacking = false;
         }
         
         private void OnTriggerEnter2D(Collider2D other)
@@ -149,18 +145,22 @@ namespace Player
                 Destroy(other.GameObject());
                 CoinManager.Instance.AddToBalance(1);
             }
+            else if (other.CompareTag("Healing"))
+            {
+                Destroy(other.GameObject());
+                _health.AddHealth(25);
+            }
         }
         
         private void InitializeWeapon()
         {
             GameObject weaponPrefab = Item.GetWeaponPrefab(_currentWeapon);
             GameObject weaponInstance = Instantiate(weaponPrefab, weapon.position, weapon.rotation, weapon);
-            float attackRange = Item.GetAttackRange(_currentWeapon);
             _weaponSpriteRenderer = weaponInstance.GetComponent<SpriteRenderer>();
             _weaponSpriteRenderer.sortingLayerName = "Foreground";
             _weaponSpriteRenderer.material = new Material(Shader.Find("Sprites/Default"));
             
-            _attack.SetAttackRange(attackRange);
+            _attack.SetAttackRange(Item.GetAttackRange(_currentWeapon));
             _attack.SetDamage(Item.GetDamage(_currentWeapon));
         }
         
@@ -184,14 +184,8 @@ namespace Player
         {
             if (_health != null)
             {
-                _health.OnHurt += HandleHurt;
                 _health.OnDie += HandleDie;
             }
-        }
-
-        private void HandleHurt()
-        {
-            _animator.SetTrigger(IsHurt);
         }
 
         private void HandleDie()

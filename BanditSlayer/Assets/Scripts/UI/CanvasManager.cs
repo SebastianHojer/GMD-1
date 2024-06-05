@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace GameLogic
+namespace UI
 {
     public class CanvasManager : MonoBehaviour
     {

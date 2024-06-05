@@ -9,9 +9,10 @@ namespace Enemy
     {
         public float speed;
         public float attackCooldown;
-
-        private float _attackRange;
+        public float _attackRange;
+        
         private bool _isFacingRight;
+        private float damageModifier;
         private Transform _player;
         private Animator _animator;
         private Health _health;
@@ -21,6 +22,8 @@ namespace Enemy
         private bool _isDead;
         private bool _isAttacking;
         
+        [SerializeField] private GameObject coinPrefab;
+        [SerializeField] private GameObject healingItemPrefab;
         [SerializeField] private Item.ItemType currentWeapon;
         
         private static readonly int IsMoving = Animator.StringToHash("isMoving");
@@ -42,22 +45,28 @@ namespace Enemy
             InitializeWeapon();
             SubscribeToHealthEvents();
         }
+        
+        public void SetDamageModifier(float modifier)
+        {
+            damageModifier = modifier;
+        }
 
         private void InitializeWeapon()
         {
             _attackRange = Item.GetAttackRange(currentWeapon);
-            int damage = Item.GetDamage(currentWeapon);
+            int baseDamage = Item.GetDamage(currentWeapon);
             _attack.SetAttackRange(_attackRange);
-            _attack.SetDamage(damage);
+            _attack.SetDamage((int)(baseDamage * damageModifier));
         }
 
         private void Update()
         {
             if (_isDead) return;
             if (!_player) return;
+            if (_isAttacking) return;
 
             float distanceToPlayer = Vector2.Distance(transform.position, _player.position);
-
+            
             if (distanceToPlayer > _attackRange)
             {
                 MoveTowardsPlayer();
@@ -105,7 +114,7 @@ namespace Enemy
         {
             _isAttacking = true;
             _animator.SetTrigger(IsAttacking);
-            // Wait for 80% of the animation length before performing the attack
+            // Wait for 80% of the animation length before performing the attack SUSPICIOUS
             yield return new WaitForSeconds(_animator.GetCurrentAnimatorStateInfo(0).length * 0.8f);
             _attack.PerformAttack();
             _isAttacking = false;
@@ -115,20 +124,26 @@ namespace Enemy
         {
             if (_health != null)
             {
-                _health.OnHurt += HandleHurt;
                 _health.OnDie += HandleDie;
             }
-        }
-
-        private void HandleHurt()
-        {
-            _animator.SetTrigger(IsHurt);
         }
 
         private void HandleDie()
         {
             _isDead = true;
             _animator.SetTrigger(IsDead);
+            // Drop coins
+            int numCoins = Random.Range(1, 6); // Random number between 1 and 5
+            for (int i = 0; i < numCoins; i++)
+            {
+                Instantiate(coinPrefab, transform.position, Quaternion.identity);
+            }
+
+            // Drop healing item
+            if (Random.value < 0.5f) // 50% chance to drop a healing item
+            {
+                Instantiate(healingItemPrefab, transform.position, Quaternion.identity);
+            }
             Destroy(gameObject, 2f);
         }
     }

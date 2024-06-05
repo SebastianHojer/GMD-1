@@ -1,44 +1,73 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace GameLogic
 {
     public class RoundManager : MonoBehaviour
     {
-        [SerializeField] private GameObject enemyPrefab;
+        public static RoundManager Instance { get; private set; }
+        public SceneReference BattlefieldSceneReference;
+        public Action<float> OnRoundStart;
+        [SerializeField] private List<GameObject> enemyPrefabs;
         [SerializeField] private Transform[] spawnPoints;
-        [SerializeField] private float spawnRate = 5f;
+        private float _spawnRate = 10f;
         private const float RoundDuration = 60f;
-        private bool _isRoundActive;
-
-        private void Start()
+        private float _damageModifier = 0.5f;
+        
+        private void Awake()
         {
-            StartCoroutine(RoundCoroutine());
+            if (Instance == null)
+            {
+                Instance = this;
+                DontDestroyOnLoad(gameObject);
+                SceneManager.sceneLoaded += OnSceneLoaded;
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
+        }
+
+        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            Debug.Log("Scene loaded: " + scene.name);
+            if(scene.name==BattlefieldSceneReference.sceneName)
+                StartCoroutine(RoundCoroutine());
         }
 
         private IEnumerator RoundCoroutine()
         {
-            _isRoundActive = true;
-
+            System.Random rand = new System.Random();
             float roundEndTime = Time.time + RoundDuration;
+            OnRoundStart?.Invoke(RoundDuration);
             while (Time.time < roundEndTime)
             {
                 foreach (var spawnPoint in spawnPoints)
                 {
-                    Instantiate(enemyPrefab, spawnPoint.position, Quaternion.identity);
+                    GameObject enemyPrefab = enemyPrefabs[rand.Next(enemyPrefabs.Count)];
+                    var enemyInstance = Instantiate(enemyPrefab, spawnPoint.position, Quaternion.identity);
+                    var enemy = enemyInstance.GetComponent<Enemy.Enemy>();
+                    if (enemy)
+                    {
+                        enemy.SetDamageModifier(_damageModifier);   
+                    }
                 }
-                yield return new WaitForSeconds(spawnRate);
+                yield return new WaitForSeconds(_spawnRate);
             }
-
-            _isRoundActive = false;
 
             while (GameObject.FindGameObjectWithTag("Enemy"))
             {
                 yield return new WaitForSeconds(0.5f);
             }
-
-            // Round is over, all enemies are destroyed
-            // You can add code here to handle the end of the round
+            
+            _damageModifier += 0.25f;
+            if (_spawnRate > 2f)
+            {
+                _spawnRate -= 0.5f;
+            }
         }
     }
 }
