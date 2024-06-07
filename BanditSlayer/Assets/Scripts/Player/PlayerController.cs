@@ -27,6 +27,7 @@ namespace Player
         private Collider2D _weaponCollider;
         private Item.ItemType _currentWeapon = Item.ItemType.Dagger;
         
+        private Vector3 _initialPosition;
         private Movement.Movement _movement;
         private Interaction.Interaction _interaction;
         private Combat.Attack _attack;
@@ -47,6 +48,7 @@ namespace Player
                 _playerControls = new PlayerInputActions();
                 SceneManager.sceneLoaded += OnSceneLoaded;
                 var gm = GameManager.Instance;
+                _initialPosition = transform.position;
             }
             else if (Instance != this)
             {
@@ -73,6 +75,7 @@ namespace Player
             _movementInput?.Enable();
             _interactionInput?.Enable();
             _attackInput?.Enable();
+            GetComponent<Rigidbody2D>().isKinematic = false;
         }
 
         private void OnDisable()
@@ -80,6 +83,7 @@ namespace Player
             _movementInput?.Disable();
             _interactionInput?.Disable();
             _attackInput?.Disable();
+            GetComponent<Rigidbody2D>().isKinematic = true;
         }
         
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)

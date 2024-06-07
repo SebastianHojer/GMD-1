@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using GameLogic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour 
 {
@@ -25,13 +26,8 @@ public class GameManager : MonoBehaviour
     {
         if (Player.PlayerController.Instance.PlayerIsDead())
         {
-            LoadGameOverScreen();
+            SceneManager.LoadScene("GameOver");
         }
-    }
-
-    private void LoadGameOverScreen()
-    {
-        GameOverScreen.Setup();
     }
 
     public void ResetGame()
