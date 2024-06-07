@@ -10310,6 +10310,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba33f7a3518c73044bbb54c54b75015b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  restartButton: {fileID: 0}
 --- !u!114 &1107131751
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11598,7 +11599,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d04efd77a2b042e3b74597d6bd57bed3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 1
+  maxHealth: 100
 --- !u!114 &1494671103
 MonoBehaviour:
   m_ObjectHideFlags: 0

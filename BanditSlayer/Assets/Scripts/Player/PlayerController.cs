@@ -46,7 +46,6 @@ namespace Player
                 DontDestroyOnLoad(gameObject);
                 _playerControls = new PlayerInputActions();
                 SceneManager.sceneLoaded += OnSceneLoaded;
-                
                 var gm = GameManager.Instance;
             }
             else if (Instance != this)
@@ -145,8 +144,8 @@ namespace Player
             else if (other.CompareTag("Coin"))
             {
                 Destroy(other.GameObject());
-                CoinManager.Instance.AddToBalance(1);
-                Debug.Log("+1 coin");
+                CoinManager.Instance.AddToBalance(5);
+                AudioManager.Instance.Play("Coin");
             }
             else if (other.CompareTag("Healing"))
             {
@@ -182,6 +181,7 @@ namespace Player
         public void BuyItem(Item.ItemType itemType)
         {
             ChangeWeapon(itemType);
+            AudioManager.Instance.Play("Buy");
         }
         
         private void SubscribeToHealthEvents()

@@ -153,7 +153,7 @@ namespace Enemy
                 var healingItem = Instantiate(healingItemPrefab, position, Quaternion.identity);
                 healingItem.GetComponent<Renderer>().material = new Material(Shader.Find("Sprites/Default"));
             }
-            Destroy(gameObject, 2f);
+            Destroy(gameObject, 0.5f);
         }
     }
 }
