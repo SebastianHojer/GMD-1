@@ -1,4 +1,5 @@
 ## Link to the Youtube video demonstration:
+[Demonstration](https://youtu.be/rgXQrKSoyhE)
 
 ## Link to blogposts:
 1. [Roll-a-ball](https://github.com/SebastianHojer/GMD-1/blob/main/Documentation/1_Rollaball.md)
@@ -9,5 +10,13 @@
 6. [Final Product and Conclusion](https://www.example.com)
 
 ## Third party sources:
+[Miniature Army] (https://assetstore.unity.com/packages/2d/characters/miniature-army-2d-v-1-medieval-style-72935)
+[Free Game Items] (https://assetstore.unity.com/packages/2d/environments/free-game-items-131764)
+[Coins SFX] (https://assetstore.unity.com/packages/p/coins-sfx-39052)
+[Pixel Art Platformer] (https://assetstore.unity.com/packages/2d/environments/pixel-art-platformer-village-props-166114)
+[Background images] (https://assetstore.unity.com/packages/2d/environments/2d-pixel-art-platformer-biome-plains-255002)
+[Music] (https://www.youtube.com/watch?v=dywM446-vcE)
+
 
 ## WebGL build:
+https://sebastianhojer.github.io/GMD-1/
