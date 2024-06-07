@@ -74,7 +74,6 @@ namespace UI
             // If the item is the default weapon (Dagger), disable the button and remove the price
             if (itemType == _currentWeapon)
             {
-                itemButton.interactable = false;
                 itemPrice.SetText("");
             }
         
