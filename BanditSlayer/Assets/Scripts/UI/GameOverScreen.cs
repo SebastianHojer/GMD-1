@@ -28,6 +28,7 @@ public class GameOverScreen : MonoBehaviour
     
     public void MainMenuButton()
     {
+        GameManager.Instance.ResetGame();
         SceneManager.LoadScene("MainMenu");
         gameObject.SetActive(false);
     }

@@ -86,11 +86,13 @@ namespace UI
     
         private void SetFirstSelectedButton()
         {
-            // Ensure a first button is stored
-            if (_firstButton != null)
+            foreach (var button in _itemButtons.Values)
             {
-                // Set the first button as the initially selected button
-                _firstButton.Select();
+                if (button.interactable)
+                {
+                    button.Select();
+                    break;
+                }
             }
         }
 
