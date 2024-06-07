@@ -24,7 +24,7 @@
   - I decided to make an interface for interactables
       - This way it is easy to find all interactables as they all implement the interface
       - This could've been made with e.g. events, but I prefer inheritance as I don't have to handle subscribing methods etc.
-      - This way I ensure that all interactables have an Interact method
+      - This way I ensure that all interactables have an Interact method. \
 ![Interactable Interface](https://i.imgur.com/7AjhAyk.png)
   - I decided to make an interface for customers in the shop
       - This way I can make the player a customer and make sure that the player interacting with the shop has the needed methods like BuyItem.
@@ -32,5 +32,5 @@
 ![Shop Interface](https://i.imgur.com/0IvUTnn.png)
   - I decided to make an Item class for everything sold in the shop
       - This way I can encapsulate all the logic and information for the different itemtypes
-      - This could've been done with a ScriptableObject for each item, or something similar. In retrospect, that would probably be a better approach.
+      - This could've been done with a ScriptableObject for each item, or something similar. In retrospect, that would probably be a better approach. \
 ![Item class](https://i.imgur.com/lB5mCpr.png)
