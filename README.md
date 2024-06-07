@@ -8,7 +8,6 @@
 4. [Development update #2](https://github.com/SebastianHojer/GMD-1/blob/main/Documentation/4_Milestone2.md)
 5. [Development update #3](https://github.com/SebastianHojer/GMD-1/blob/main/Documentation/5_Milestone3.md)
 6. [Final Product and Conclusion](https://github.com/SebastianHojer/GMD-1/blob/main/Documentation/6_FinalBlogpost.md)
-7. [Reflections](https://github.com/SebastianHojer/GMD-1/blob/main/Documentation/Reflections.md)
 
 ## Third party sources:
 - [Miniature Army](https://assetstore.unity.com/packages/2d/characters/miniature-army-2d-v-1-medieval-style-72935)
